@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    serverActions: true, // Renamed from serverActions
+    serverActions: true,
     serverComponentsExternalPackages: ["mongoose"],
   },
   images: {
@@ -14,7 +14,7 @@ const nextConfig = {
     ],
   },
   typescript: {
-    ignoreBuildErrors: true, // Moved from images to top-level
+    ignoreBuildErrors: true,
   },
 };
 
