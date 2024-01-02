@@ -24,6 +24,23 @@ const userSchema = new mongoose.Schema({
       ref: "Community",
     },
   ],
+  likedThreads: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Thread",
+    },
+  ],
+  repostedThreads: [
+    {
+      originalThreadId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Thread",
+      },
+      repostedText: {
+        type: String,
+      },
+    },
+  ],
 });
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);

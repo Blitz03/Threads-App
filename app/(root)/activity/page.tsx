@@ -68,6 +68,7 @@ export default async function Page() {
                   community={parentThread.community}
                   createdAt={parentThread.createdAt}
                   comments={parentThread.children}
+                  likes={parentThread.likes}
                   isLink
                 />
                 <div className="mt-5">
@@ -81,6 +82,7 @@ export default async function Page() {
                     community={activityItem.community}
                     createdAt={activityItem.createdAt}
                     comments={activityItem.children}
+                    likes={activityItem.likes}
                     isComment
                     isLink
                   />

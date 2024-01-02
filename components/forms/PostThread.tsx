@@ -17,24 +17,22 @@ import {
 import { Textarea } from "../ui/textarea";
 import { ThreadValidation } from "@/lib/validations/thread";
 import { createThread } from "@/lib/actions/thread.actions";
+import { useOrganization } from "@clerk/nextjs";
 
 export default function PostThread({ userId }: { userId: string }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { organization } = useOrganization();
 
   async function onSubmit(values: z.infer<typeof ThreadValidation>) {
-    try {
-      await createThread({
-        text: values.thread,
-        author: userId,
-        communityId: null,
-        path: pathname,
-      });
+    await createThread({
+      text: values.thread,
+      author: userId,
+      communityId: organization ? organization.id : null,
+      path: pathname,
+    });
 
-      router.push("/");
-    } catch (error: any) {
-      throw new Error(`Error is ${error.message}`);
-    }
+    router.push("/");
   }
 
   // This is the data that we'll pass to the Form component (Schema)

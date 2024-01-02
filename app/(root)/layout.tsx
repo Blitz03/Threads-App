@@ -1,14 +1,13 @@
 import { Inter } from "next/font/google";
-import { redirect } from "next/navigation";
 import "../globals.css";
 
-import { ClerkProvider, currentUser } from "@clerk/nextjs";
-import { fetchUser } from "@/lib/actions/user.actions";
+import { ClerkProvider } from "@clerk/nextjs";
 
 import Topbar from "@/components/shared/Topbar";
 import LeftSidebar from "@/components/shared/LeftSidebar";
 import RightSidebar from "@/components/shared/RightSidebar";
 import Bottombar from "@/components/shared/Bottombar";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,14 +21,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await currentUser();
-
-  if (!user) return null;
-
-  const userInfo = await fetchUser(user?.id);
-
-  if (!userInfo?.onboarded) redirect("/onboarding");
-
   return (
     <ClerkProvider>
       <html lang="en">
@@ -45,6 +36,7 @@ export default async function RootLayout({
 
             <RightSidebar />
           </main>
+          <Toaster />
 
           <Bottombar />
         </body>

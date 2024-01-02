@@ -1,9 +1,10 @@
 import Image from "next/image";
 import ProfileHeader from "@/components/shared/ProfileHeader";
 import ThreadsTab from "@/components/shared/ThreadsTab";
+import ThreadCard from "@/components/cards/ThreadCard";
 import { redirect } from "next/navigation";
 import { currentUser } from "@clerk/nextjs";
-import { fetchUser } from "@/lib/actions/user.actions";
+import { fetchUser, fetchUserLikedPosts } from "@/lib/actions/user.actions";
 
 import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import { profileTabs } from "@/constants";
@@ -16,6 +17,8 @@ export default async function Page({ params }: { params: { id: string } }) {
   const userInfo = await fetchUser(params.id);
 
   if (!userInfo?.onboarded) redirect("/onboarding");
+
+  const likedThreadsUser = await fetchUserLikedPosts(userInfo?._id);
 
   return (
     <section>
@@ -53,18 +56,46 @@ export default async function Page({ params }: { params: { id: string } }) {
             ))}
           </TabsList>
 
-          {profileTabs.map((tab) => (
-            <TabsContent
-              key={`content-${tab.label}`}
-              value={tab.value}
-              className="w-full text-light-1">
+          <TabsContent value="threads" className="w-full text-light-1">
+            {userInfo?.threads?.length > 0 ? (
               <ThreadsTab
                 currentUserId={user.id}
                 accountId={userInfo.id}
                 accountType="User"
               />
-            </TabsContent>
-          ))}
+            ) : (
+              <p className="!text-base-regular text-light-3 mt-9">No threads</p>
+            )}
+          </TabsContent>
+          <TabsContent value="replies" className="w-full text-light-1">
+            <section className="mt-9 flex flex-col gap-10">
+              <p className="!text-base-regular text-light-3">No replies</p>
+            </section>
+          </TabsContent>
+          <TabsContent value="liked" className="w-full text-light-1">
+            <section className="mt-9 flex flex-col gap-10">
+              {likedThreadsUser?.likedThreads.length > 0 ? (
+                likedThreadsUser?.likedThreads.map((likedThread: any) => (
+                  <ThreadCard
+                    key={likedThread._id}
+                    id={likedThread._id}
+                    currentUserId={user?.id || ""}
+                    parentId={likedThread.parentId}
+                    content={likedThread.text}
+                    author={likedThread.author}
+                    community={likedThread.community}
+                    createdAt={likedThread.createdAt}
+                    comments={likedThread.children}
+                    likes={likedThread.likes}
+                  />
+                ))
+              ) : (
+                <p className="!text-base-regular text-light-3">
+                  No liked posts
+                </p>
+              )}
+            </section>
+          </TabsContent>
         </Tabs>
       </div>
     </section>
