@@ -14,7 +14,10 @@ export default function RepostThread({
 }) {
   async function handleClick() {
     try {
-      await repostThread({ currentUserId, threadId: JSON.parse(threadId) });
+      await repostThread({
+        userId: currentUserId,
+        threadId: JSON.parse(threadId),
+      });
     } catch (error: any) {
       throw new Error(
         `Failed to repost thread/onclick event: ${error.message}`

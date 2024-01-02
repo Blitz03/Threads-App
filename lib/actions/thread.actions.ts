@@ -251,20 +251,14 @@ export async function addCommentToThread({
 }
 
 export async function repostThread({
-  currentUserId,
+  userId,
   threadId,
 }: {
-  currentUserId: string;
+  userId: string;
   threadId: string;
 }) {
   try {
     connectToDB();
-
-    const currentUser = await User.findOne({ id: currentUserId });
-
-    if (!currentUser) {
-      throw new Error(`User with ID ${currentUserId} not found`);
-    }
 
     const repostedThread = await Thread.findById(threadId);
 
@@ -273,7 +267,7 @@ export async function repostThread({
     }
     // Update User model
     await User.findOneAndUpdate(
-      { id: currentUserId },
+      { id: userId },
       {
         $push: {
           threads: repostedThread._id,

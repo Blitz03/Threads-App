@@ -61,7 +61,7 @@ export default async function Page({ params }: { params: { id: string } }) {
               <ThreadsTab
                 currentUserId={user.id}
                 accountId={userInfo.id}
-                accountType="User"
+                accountType=""
               />
             ) : (
               <p className="!text-base-regular text-light-3 mt-9">No threads</p>
